@@ -1,0 +1,106 @@
+import React, { useState } from 'react';
+import { Text, View, StyleSheet, TouchableOpacity, ScrollView, Alert } from 'react-native';
+import { ProgressBar, Card, Divider } from 'react-native-paper';
+
+export default function App() {
+  const [calorias, setCalorias] = useState(0);
+  const [agua, setAgua] = useState(0);
+  const metaCalorias = 2200;
+  const metaAgua = 3.0;
+
+  const registrar = (valor, nome) => {
+    if (nome === 'Cerveja' || nome === 'Álcool') {
+      Alert.alert("🚫 NutriApp Avisa", "Foque em opções saudáveis para bater sua meta!");
+    } else {
+      setCalorias(calorias + valor);
+      Alert.alert("✅ Sucesso", `${nome} registrado com +${valor} kcal!`);
+    }
+  };
+
+  const beberAgua = () => {
+    const novoValor = agua + 0.3;
+    setAgua(novoValor);
+    if (novoValor >= metaAgua) {
+      Alert.alert("🎉 Parabéns!", "Você atingiu 100% da meta de hidratação hoje!");
+    }
+  };
+
+  return (
+    <View style={styles.mainContainer}>
+      <ScrollView style={styles.container}>
+        <View style={styles.header}>
+          <Text style={styles.title}>NutriApp Pro v3.0 🍎</Text>
+          <Text style={styles.subtitle}>Gestão de Saúde & Performance</Text>
+        </View>
+
+        <Card style={styles.mainCard}>
+          <Text style={styles.cardLabel}>CONSUMO DIÁRIO</Text>
+          <Text style={styles.caloriasText}>{calorias} <Text style={styles.kcal}>/ {metaCalorias} kcal</Text></Text>
+          <ProgressBar progress={calorias/metaCalorias} color={'#4facfe'} style={styles.progress} />
+          
+          <Divider style={styles.divider} />
+
+          <View style={styles.waterInfo}>
+            <Text style={styles.waterText}>💧 Hidratação: {agua.toFixed(1)}L <Text style={styles.goal}>/ {metaAgua}L</Text></Text>
+            <ProgressBar progress={agua/metaAgua} color={'#00c6ff'} style={styles.progressSmall} />
+          </View>
+        </Card>
+
+        <View style={styles.buttonGrid}>
+          <TouchableOpacity style={[styles.btn, {backgroundColor: '#8B4513'}]} onPress={() => registrar(250, "Café da Manhã")}>
+            <Text style={styles.btnText}>☕ Café Completo</Text>
+          </TouchableOpacity>
+          <TouchableOpacity style={[styles.btn, {backgroundColor: '#2ecc71'}]} onPress={() => registrar(600, "Almoço Saudável")}>
+            <Text style={styles.btnText}>🥗 Almoço Nutritivo</Text>
+          </TouchableOpacity>
+          <TouchableOpacity style={[styles.btn, {backgroundColor: '#e67e22'}]} onPress={() => registrar(180, "Fruta/Lanche")}>
+            <Text style={styles.btnText}>🍎 Lanche Leve</Text>
+          </TouchableOpacity>
+          <TouchableOpacity style={[styles.btn, {backgroundColor: '#3498db'}]} onPress={beberAgua}>
+            <Text style={styles.btnText}>💧 Beber 300ml</Text>
+          </TouchableOpacity>
+        </View>
+
+        <TouchableOpacity style={styles.btnReset} onPress={() => {setCalorias(0); setAgua(0);}}>
+          <Text style={styles.btnText}>🔄 Zerar Dados do Dia</Text>
+        </TouchableOpacity>
+
+        <Text style={styles.footer}>Desenvolvido por Uanderson77 | Analista de Sistemas</Text>
+        <View style={{ height: 100 }} /> 
+      </ScrollView>
+
+      {/* BANNER DE MONETIZAÇÃO SIMULADO NO FOOTER */}
+      <View style={styles.adContainer}>
+         <View style={styles.fakeAd}>
+            <Text style={styles.fakeAdText}>AD ID: ca-app-pub-4447555957079292/1951234935</Text>
+         </View>
+      </View>
+    </View>
+  );
+}
+
+const styles = StyleSheet.create({
+  mainContainer: { flex: 1, backgroundColor: '#f0f2f5' },
+  container: { flex: 1 },
+  header: { padding: 45, backgroundColor: '#1a73e8', alignItems: 'center', borderBottomLeftRadius: 40, borderBottomRightRadius: 40 },
+  title: { fontSize: 26, fontWeight: 'bold', color: '#fff' },
+  subtitle: { color: '#fff', opacity: 0.8, fontSize: 14 },
+  mainCard: { margin: 20, padding: 25, borderRadius: 25, elevation: 10, backgroundColor: '#fff' },
+  cardLabel: { fontSize: 11, color: '#777', fontWeight: 'bold', letterSpacing: 1 },
+  caloriasText: { fontSize: 40, fontWeight: 'bold', color: '#2c3e50', marginVertical: 10 },
+  kcal: { fontSize: 18, color: '#95a5a6' },
+  progress: { height: 14, borderRadius: 7 },
+  divider: { marginVertical: 20 },
+  waterInfo: { marginTop: 10 },
+  waterText: { fontSize: 18, color: '#2980b9', fontWeight: 'bold', marginBottom: 8 },
+  goal: { fontSize: 14, color: '#bdc3c7' },
+  progressSmall: { height: 10, borderRadius: 5 },
+  buttonGrid: { flexDirection: 'row', flexWrap: 'wrap', justifyContent: 'space-between', paddingHorizontal: 20 },
+  btn: { width: '48%', padding: 22, borderRadius: 18, marginBottom: 15, elevation: 3, justifyContent: 'center' },
+  btnText: { color: '#fff', fontWeight: 'bold', textAlign: 'center', fontSize: 13 },
+  btnReset: { backgroundColor: '#d63031', margin: 20, padding: 18, borderRadius: 15, alignItems: 'center' },
+  footer: { textAlign: 'center', color: '#bdc3c7', fontSize: 11, marginBottom: 20 },
+  adContainer: { position: 'absolute', bottom: 0, width: '100%', backgroundColor: '#fff' },
+  fakeAd: { backgroundColor: '#f8f9fa', height: 60, justifyContent: 'center', alignItems: 'center', borderTopWidth: 1, borderTopColor: '#eee' },
+  fakeAdText: { fontSize: 9, color: '#adb5bd', letterSpacing: 1 }
+});
